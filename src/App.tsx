@@ -1,19 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
+import axios from "axios";
+
+import CardList from "./components/card-list/card-list.component";
+
 import "./App.css";
 
-interface IMonsters {
-  name: string;
-  type: number;
-}
+type IMonsters = [];
 
-const App: React.FC = () => {
-  const [monsters, setMonsters] = useState<IMonsters[]>([{ name: "motoki", type: 1 }, { name: "zomebie", type: 2 }]);
+const App: FC = () => {
+  const [monsters, setMonsters] = useState<IMonsters>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios("https://jsonplaceholder.typicode.com/users");
+      setMonsters(result.data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="App">
-      {monsters.map(monster => (
-        <h1 key={monster.type}>{monster.name}</h1>
-      ))}
+      <CardList monsters={monsters} />
     </div>
   );
 };
